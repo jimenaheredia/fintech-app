@@ -1,0 +1,237 @@
+## 🧠 1. ¿Qué te piden hacer?
+
+Desarrollar **un sistema web para una fintech** que permita gestionar clientes, cuentas bancarias y movimientos como depósitos y retiros.
+
+Debe cumplir con:
+
+✔ Gestión de clientes (crear, modificar, eliminar, login con correo y password).
+✔ Gestión de cuentas (crear cuenta con saldo inicial → asociada a cliente).
+✔ Movimientos (depósitos y retiros registrando monto, fecha y tipo).
+✔ Consulta de saldo.
+✔ Usar **POO**, documentar con **UML**, desarrollar en **HTML + JavaScript** (o similar).
+✔ Código en **GitHub** y desplegado **en Internet**.
+✔ Interfaz amigable generada con ayuda de IA.
+🧩 Opcional: Implementar **blockchain para los movimientos**.
+
+---
+
+## 🛠️ 2. Tecnologías y conocimientos necesarios
+
+### Esenciales
+
+| Tema                                       | Descripción                                |
+| ------------------------------------------ | ------------------------------------------ |
+| **POO (Programación Orientada a Objetos)** | Clases, objetos, métodos, encapsulamiento. |
+| **JavaScript modular**                     | Import/export, manejo de objetos.          |
+| **HTML + CSS**                             | Interfaz básica.                           |
+| **LocalStorage o JSON**                    | Guardar datos si no usas backend.          |
+| **Git & GitHub**                           | Subir código.                              |
+| **Despliegue web**                         | GitHub Pages, Netlify o Vercel.            |
+| **UML**                                    | Diagrama de clases.                        |
+
+### Recomendadas
+
+* **Node.js + Express (si quieres backend)**
+* **Bootstrap o Tailwind (UI)**
+* **Blockchain básico (estructura de bloques con hash SHA-256)**
+
+---
+
+## 📌 3. Etapas sugeridas del proyecto
+
+1. **Análisis del problema y diseño UML** ← Etapa actual.
+2. Modelado POO (clases: Cliente, Cuenta, Movimiento, Blockchain*).
+3. Lógica del negocio (depósitos, retiros, validaciones).
+4. Interfaz web básica.
+5. Conexión UI con lógica.
+6. Pruebas.
+7. Publicación + subida a GitHub.
+8. *(Opcional)* Integración de blockchain.
+
+---
+
+## 🧩 4. Posible UML (simplificado)
+
+```
+Cliente
+- id
+- nombre
+- apellido
+- DNI
+- email
+- password
++ crearCuenta()
++ modificarDatos()
+
+Cuenta
+- idCuenta
+- saldo
+- cliente (Cliente)
++ depositar()
++ retirar()
++ mostrarSaldo()
+
+Movimiento
+- tipo
+- monto
+- fecha
+
+Blockchain (opcional)
+- hash
+- hashPrevio
+- datosMovimiento
+```
+
+---
+
+## 📁 5. Estructura básica del proyecto
+
+```
+/proyecto-fintech
+│── index.html
+│── styles.css
+│── main.js
+│
+└── /modules
+    │── Cliente.js
+    │── Cuenta.js
+    │── Movimiento.js
+    │── Blockchain.js  (opcional)
+```
+
+---
+
+## 💻 6. Plantilla inicial en JavaScript (POO)
+
+### `/modules/Cliente.js`
+
+```javascript
+export class Cliente {
+  constructor(id, nombre, apellido, dni, email, password) {
+    this.id = id;
+    this.nombre = nombre;
+    this.apellido = apellido;
+    this.dni = dni;
+    this.email = email;
+    this.password = password;
+    this.cuentas = [];
+  }
+
+  agregarCuenta(cuenta) {
+    this.cuentas.push(cuenta);
+  }
+}
+```
+
+### `/modules/Cuenta.js`
+
+```javascript
+export class Cuenta {
+  constructor(idCuenta, cliente, saldoInicial = 0) {
+    this.idCuenta = idCuenta;
+    this.cliente = cliente;
+    this.saldo = saldoInicial;
+    this.movimientos = [];
+  }
+
+  depositar(monto) {
+    this.saldo += monto;
+    this.movimientos.push({ tipo: "Depósito", monto, fecha: new Date() });
+  }
+
+  retirar(monto) {
+    if (monto > this.saldo) return "Fondos insuficientes";
+    this.saldo -= monto;
+    this.movimientos.push({ tipo: "Retiro", monto, fecha: new Date() });
+  }
+
+  consultarSaldo() {
+    return this.saldo;
+  }
+}
+```
+
+### `/modules/Movimiento.js`
+
+```javascript
+export class Movimiento {
+  constructor(tipo, monto) {
+    this.tipo = tipo;
+    this.monto = monto;
+    this.fecha = new Date();
+  }
+}
+```
+
+### (Opcional) `/modules/Blockchain.js`
+
+```javascript
+import crypto from "crypto-js";
+
+export class Bloque {
+  constructor(index, timestamp, data, prevHash = "") {
+    this.index = index;
+    this.timestamp = timestamp;
+    this.data = data;
+    this.prevHash = prevHash;
+    this.hash = this.calcularHash();
+  }
+
+  calcularHash() {
+    return crypto.SHA256(
+      this.index + this.timestamp + JSON.stringify(this.data) + this.prevHash
+    ).toString();
+  }
+}
+```
+
+---
+
+## 🚀 index.html ejemplo básico
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sistema Fintech</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>Sistema de Gestión Fintech</h1>
+  <button id="btnCrearCliente">Crear Cliente</button>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
+```
+
+---
+
+## 🔌 main.js
+
+```javascript
+import { Cliente } from "./modules/Cliente.js";
+import { Cuenta } from "./modules/Cuenta.js";
+
+const clientes = [];
+
+document.getElementById("btnCrearCliente").addEventListener("click", () => {
+  const nuevoCliente = new Cliente(1, "Jimena", "Apellido", "12345678", "ji@me.com", "1234");
+  clientes.push(nuevoCliente);
+  console.log("Cliente creado:", nuevoCliente);
+});
+```
+
+---
+
+## 🎯 7. ¿Qué deberías repasar o aprender si aún no dominas?
+
+* Clases y objetos en **JavaScript**
+* Import/export de módulos ES6
+* Manejo de eventos en HTML/JS
+* UML (diagrama de clases)
+* Cómo desplegar en GitHub Pages
+* *(Opcional)* Blockchain básico
+
+---
+
